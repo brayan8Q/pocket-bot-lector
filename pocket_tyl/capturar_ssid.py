@@ -31,6 +31,9 @@ HOOK = """
 LOGIN = "https://pocketoption.com/en/login/"
 DEMO = "https://pocketoption.com/en/cabinet/demo-quick-high-low/"
 REAL_ROOM = "https://pocketoption.com/en/cabinet/quick-high-low/"
+# 16 Nov 2026: the PUBLIC try-demo terminal (no account, no password, play money). Its page also sends a demo auth
+# frame, so the bot can run on another computer without the owner's credentials (button «Demo pública» or --publica).
+TRY_DEMO = "https://pocketoption.com/en/cabinet/try-demo/"
 
 
 def is_real() -> bool:
@@ -148,6 +151,12 @@ def main() -> None:
     demo_btn = QPushButton(f"Abrir sala {room}")
     close_btn = QPushButton("Cerrar")
     row.addWidget(demo_btn)
+    public_btn = None
+    if not real:
+        public_btn = QPushButton("Demo pública (sin cuenta)")
+        public_btn.setToolTip("Abre la terminal de prueba pública de Pocket Option: no pide usuario ni contraseña. "
+                              "El bot queda operando sobre esa demo anónima, no sobre la cuenta del dueño.")
+        row.addWidget(public_btn)
     row.addStretch()
     row.addWidget(close_btn)
     box.addWidget(note)
@@ -181,7 +190,10 @@ def main() -> None:
 
     view = QWebEngineView()
     view.setPage(Page(profile, view))
-    view.setUrl(QUrl(LOGIN))
+    public = (not real) and ("--publica" in sys.argv)
+    view.setUrl(QUrl(TRY_DEMO if public else LOGIN))
+    if public:
+        status.setText("Abriendo la demo pública de Pocket Option (sin cuenta)…")
 
     class Bridge(QObject):
         auth = Signal(str, str, str)
@@ -201,6 +213,8 @@ def main() -> None:
     app.aboutToQuit.connect(done.set)
     box.addWidget(view, 1)
     demo_btn.clicked.connect(lambda: view.setUrl(QUrl(room_url)))
+    if public_btn is not None:
+        public_btn.clicked.connect(lambda: view.setUrl(QUrl(TRY_DEMO)))
     close_btn.clicked.connect(window.close)
     window.setCentralWidget(body)
     window.showMaximized()  # the reCAPTCHA image grid opens to the right and was cut in a small window

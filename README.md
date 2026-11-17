@@ -28,7 +28,27 @@ Para correr las pruebas:
 .venv\Scripts\python.exe -m pytest tests -q
 ```
 
-## Iniciar sesión (una vez por equipo)
+## Dos formas de entrar
+
+| | Con la cuenta del dueño | **Sin cuenta: demo pública** |
+|---|---|---|
+| Qué es | Su cuenta DEMO de Pocket | La terminal de prueba pública de Pocket: dinero de juguete que no es de nadie |
+| Contraseña | La escribe el dueño, una vez, en ese equipo | **No hace falta** |
+| Acceso | `Conectar Pocket Option.bat` | **`Conectar demo publica (sin cuenta).bat`** |
+| Dónde se ven las operaciones | En la cuenta DEMO del dueño | Solo en el bot y en el panel (esa demo no es de ninguna cuenta) |
+| Para qué sirve | Operar la DEMO del dueño | Trabajar en **otro equipo** (por ejemplo el de Muse) sin tener su contraseña |
+
+### Sin cuenta: demo pública (para trabajar en otro equipo)
+
+1. Doble clic en **`Conectar demo publica (sin cuenta).bat`**. Abre la terminal de prueba pública de Pocket Option; no pide usuario ni contraseña.
+2. En unos segundos la ventana dice «✅ Sesión de la cuenta DEMO capturada» y se cierra sola. (También hay un botón «Demo pública (sin cuenta)» en la ventana normal de conexión.)
+3. Arrancar el bot con `Iniciar Pocket Lector.bat`.
+
+**Estado: añadido el 16 de noviembre y sin probar contra Pocket** (esa noche el sitio no aceptaba conexiones desde el equipo del dueño). Lo comprobado: la ventana acepta y guarda una sesión DEMO anónima con el mismo formato que la de una cuenta. Lo que falta ver en vivo: que la página pública mande su sesión con `isDemo: 1` y que el bot conecte con ella. Si la ventana se queda en «Esperando…», mirar qué manda la página al abrir (`42["auth", …]`) y ajustar `handle_console` / `demo_check`.
+
+Con la demo pública, Pocket no ofrece la vista de 4 gráficas. En el panel hay que encender «Usar las 4 gráficas del panel» (ajuste `multiWall: true`): el panel dibuja las cuatro con las velas del bot y los pares cambian solos.
+
+## Iniciar sesión con la cuenta del dueño (una vez por equipo)
 
 1. Doble clic en **`Conectar Pocket Option.bat`**. Abre una ventana con la página oficial de Pocket Option.
 2. **El dueño escribe su usuario y contraseña** en esa página. El programa no los ve ni los guarda.
