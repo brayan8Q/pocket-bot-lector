@@ -334,3 +334,14 @@ def test_candles_route_gives_the_pairs_asked_for(tmp_path):
         assert (symbol, name, payout) == ("EURUSD_otc", "EUR/USD OTC", 50)
         assert closed == [[1.0, 1.0, 1.0, 1.0], [1.1, 1.1, 1.1, 1.1]] and forming == [1.2] * 4 and age < 2 and 0 <= open_for < 15
     run(go())
+
+
+def test_assets_route_gives_pockets_rows(tmp_path):
+    async def go():
+        conn = FakeConn()
+        b, _store = bridge(tmp_path, conn)
+        status, answer = await b.route("GET", "/activos", {"x-lector-token": "clave"}, b"")
+        assert status == 200 and answer["ok"] and any(r[1] == "EURUSD_otc" for r in answer["assets"])
+        status, _ = await b.route("GET", "/activos", {"x-lector-token": "otra"}, b"")
+        assert status == 403
+    run(go())

@@ -79,6 +79,7 @@ Todas las peticiones llevan la cabecera `X-Lector-Token` con la clave de `lector
 | `GET /velas?pares=A,B,C,D` | Velas de 15 s de hasta 8 pares | `pairs: [[símbolo, nombre, pago, cerradas [o,h,l,c], en curso, edad s, segundos abierta]]` |
 | `POST /orden` | Abrir una operación | cuerpo `{ asset, dir: "up"|"down", seconds, level }` → `id`, precio y hora de entrada, pago, monto |
 | `GET /resultado?id=` | Resultado de esa operación | `result: "win"|"loss"|"tie"`, `net`, precio de cierre |
+| `GET /activos` | La fila de Pocket de cada activo (solo lectura) | `assets: [[id, símbolo, nombre, tipo, …, pago (5), …, es OTC (9), …, abierto (14), …, vencimiento mínimo en s (17), …]]` |
 
 Montos por nivel: $1.00 / 2.20 / 4.84 / 10.65 / 23.43. El panel, tal como está configurado, usa siempre el nivel 0 ($1, sin martingala).
 

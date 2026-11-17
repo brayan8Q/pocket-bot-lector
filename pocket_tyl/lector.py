@@ -279,6 +279,9 @@ class LectorBridge:
             return 200, await self.order(payload if isinstance(payload, dict) else {})
         if method == "GET" and url.path == "/precios":
             return 200, self.prices()
+        if method == "GET" and url.path == "/activos":
+            # 17 Nov 2026: Pocket's own row of every asset (updateAssets), read-only: payout, type, open, expiries…
+            return 200, dict(ok=True, assets=[list(row) for row in list(getattr(self.conn, "assets", {}).values())])
         if method == "GET" and url.path == "/velas":
             return 200, self.candles_of((parse_qs(url.query).get("pares") or [""])[0])
         if method == "GET" and url.path == "/resultado":

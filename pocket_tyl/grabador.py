@@ -64,7 +64,8 @@ class TickRecorder:
             self.last_payouts = now
             rows = []
             for sym, row in (getattr(self.conn, "assets", None) or {}).items():
-                if str(sym).endswith("_otc") and len(row) > 5 and row[5]:
+                # 17 Nov 2026: with only_otc off (Lector bridge) the real-market pairs' payout is kept too.
+                if (str(sym).endswith("_otc") or not getattr(self, "only_otc", True)) and len(row) > 5 and row[5]:
                     rows.append(f"{now:.0f},{sym},{row[5]}\n")
             if rows:
                 with open(d / "payouts.csv", "a", encoding="ascii") as f:
